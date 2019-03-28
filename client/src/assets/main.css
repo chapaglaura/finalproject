@@ -1,0 +1,39 @@
+body{
+    background-color: #ACDAB7;
+    color: #1D4367;
+}
+
+.txt-normal {
+    font-family: 'Arial', sans-serif;
+    
+    }
+
+.navbar {
+    background-color: #92C04A; 
+}
+
+.btn {
+    border-radius: 100px;
+    color: #92C04A;
+}
+
+h1 {
+    color:#1D4367;
+}
+
+.containter {
+    margin: auto;
+    width: 100%;
+    padding: 30px;
+}
+
+.card-body {
+    background-color: #9ED88B;
+        margin: auto;
+        width: 100%;
+        border: 3px;
+        padding: 30px;
+}
+#event{
+    -ms-text-align-last: right; 
+}
