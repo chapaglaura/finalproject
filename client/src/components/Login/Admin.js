@@ -24,13 +24,13 @@ class AdminLogin extends Component {
     const username = this.state.username.trim();
     const password = this.state.password.trim();
     const type = "admin";
-
     API.loginUser({
       username,
       password,
       type
     }).then(res => {
       const admin = res.data;
+      console.log("hey", admin);
       if (admin) {
         this.props.history.push("/admin");
       }

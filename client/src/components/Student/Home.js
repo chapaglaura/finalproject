@@ -12,14 +12,19 @@ class Home extends Component {
     super(props);
 
     this.state = {
-      name: "",
-      university: "",
-      project: "",
-      username: "",
-      hours: 0,
-      checkin: "",
-      checkout: "",
-      check: false
+      student: {
+        name: "",
+        username: "",
+        university: "",
+        hours: 0
+      },
+      project: {
+        name: "",
+        id: "",
+        hours: 0,
+        organization: "",
+        area: ""
+      }
     };
   }
 
@@ -30,28 +35,39 @@ class Home extends Component {
       } else {
         API.getByUserID(res.data.type, res.data._id).then(res => {
           console.log(res);
-          const {
-            name,
-            university,
-            project,
-            username,
-            hours,
-            checkin,
-            checkout
-          } = res.data;
-          this.setState({
-            name,
-            university,
-            project,
-            username,
-            hours,
-            checkin,
-            checkout
+          const { hours, name, university, username } = res.data.student;
+          const { project } = res.data;
+
+          API.getOne("project", project).then(res => {
+            console.log(res);
+            const project  = {...res.data.dbModel};
+            this.setState({
+              student: {
+                name,
+                username,
+                university,
+                hours
+              },
+              project
+            });
           });
         });
       }
     });
   }
+
+  checkIn = () => {
+    const { name, username } = this.state.student;
+    const { project } = this.state;
+    const date = new Date();
+    console.log(name, project, date);
+    API.checkIn({
+      student: name,
+      studentID: username,
+      date,
+      project
+    });
+  };
 
   logout = () => {
     API.logoutUser().then(res => {
@@ -60,15 +76,10 @@ class Home extends Component {
   };
 
   render() {
-    const {
-      name,
-      university,
-      project,
-      username,
-      hours,
-      checkin,
-      checkout
-    } = this.state;
+    const { name, username, university, hours } = this.state.student;
+    console.log(hours);
+    const project = this.state.project.name;
+
     const id = this.props.match.params.id;
     return (
       <div className="container">
@@ -80,7 +91,9 @@ class Home extends Component {
           <Events />
         </h2>
         <div className="jumbotron">
-          <LoadingButton id={id} />
+          <button type="button" className="btn btn-info" onClick={this.checkIn}>
+            Check in
+          </button>
         </div>
         <Card>
           <Card.Header>Quick Information</Card.Header>
@@ -89,7 +102,7 @@ class Home extends Component {
               <ul className="list-group list-group-flush">
                 <li className="list-group-item">StudentID: {username}</li>
                 <li className="list-group-item">Project: {project}</li>
-                <li className="list-group-item">Hours: {hours}</li>
+                <li className="list-group-item">Hours: {'' + hours}</li>
               </ul>
             </blockquote>
           </Card.Body>

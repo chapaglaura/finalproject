@@ -10,7 +10,8 @@ class NewStudent extends Component {
       university: "",
       project: "",
       username: "",
-      password: ""
+      password: "",
+      projects: []
     };
   }
 
@@ -19,6 +20,14 @@ class NewStudent extends Component {
       if (res.data.type !== "admin") {
         this.props.history.push("/");
       }
+    });
+
+    API.getAll("project").then(res => {
+      const projects = [...res.data];
+      this.setState({
+        projects,
+        project: projects[0]._id
+      });
     });
   }
 
@@ -34,7 +43,7 @@ class NewStudent extends Component {
     event.preventDefault();
     const name = this.state.name.trim();
     const university = this.state.university.trim();
-    const project = this.state.project.trim();
+    const project = this.state.project;
     const username = this.state.username.trim();
     const password = this.state.password.trim();
 
@@ -45,17 +54,19 @@ class NewStudent extends Component {
     }).then(res => {
       if (res) {
         API.saveNew("students", {
-          name,
-          university,
+          student: {
+            name,
+            university,
+            username
+          },
           project,
-          username,
           userID: res.data._id
         }).then(() => {
           this.setState({
             name: "",
             university: "",
-            project: "",
-            username: ""
+            username: "",
+            password: ""
           });
         });
       }
@@ -63,7 +74,7 @@ class NewStudent extends Component {
   };
 
   render() {
-    const { name, university, project, username, password } = this.state;
+    const { name, university, projects, username, password } = this.state;
     return (
       <form className="container" onSubmit={this.submitStudent}>
         <h1>Add a New Social Service Student</h1>
@@ -90,15 +101,13 @@ class NewStudent extends Component {
         </div>
 
         <div className="form-group">
-          <label htmlFor="project">Assigned Project:</label>
-          <input
-            className="form-control"
-            name="project"
-            type="text"
-            placeholder="project"
-            onChange={this.handleInputChange}
-            value={project}
-          />
+          <label htmlFor="project">Project:</label>
+          <select onChange={this.handleInputChange} name="project" className="form-control" id="project">
+            {projects.map(project => {
+              console.log(project);
+              return <option value={project._id} key={project._id}>{project.name}</option>;
+            })}
+          </select>
         </div>
 
         <div className="form-group">

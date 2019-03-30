@@ -11,9 +11,10 @@ class Supervisor extends Component {
     this.state = {
       students: [],
       name: "",
-      organization: "",
-      project: "",
-      area: "",
+      project: {
+        name: "",
+        id: ""
+      },
       username: ""
     };
   }
@@ -28,14 +29,23 @@ class Supervisor extends Component {
           const { name, organization, project, area, username } = res.data;
           this.setState({
             name,
-            organization,
-            project,
-            area,
+            project: {
+              id: project
+            },
             username
           });
-          API.getByProject("student", project)
-          .then(res => {
+          API.getByProject("checkin", project).then(res => {
             console.log(res);
+            this.setState({
+              students: [...res.data]
+            });
+          });
+          API.getById("project", project).then(res => {
+            this.setState({
+              project: {
+                name: res.data.dbModel.name
+              }
+            });
           });
         });
       }
@@ -85,7 +95,6 @@ class Supervisor extends Component {
 
   // }
 
-
   logout = () => {
     API.logoutUser().then(res => {
       this.props.history.push("/");
@@ -93,7 +102,8 @@ class Supervisor extends Component {
   };
 
   render() {
-    // const student = this.getStudent();
+    const students = [...this.state.students];
+    const projectName = this.state.project.name;
 
     return (
       <div className="container">
@@ -104,15 +114,12 @@ class Supervisor extends Component {
         <Card>
           <Card.Header>Quick Information</Card.Header>
           <Card.Body>
-            <blockquote className="blockquote mb-0">
               <ul className="list-group list-group-flush">
-                {" "}
-                Students Waiting For Approval
-                <li className="list-group-item">{"student"}</li>
-                <li className="list-group-item" />
-                <li className="list-group-item" />
+                {students.map(student => {
+                  console.log(student);
+                  return <li key={student._id} id={student._id}>{student.student} - {projectName} - {student.date} </li>;
+                })}
               </ul>
-            </blockquote>
           </Card.Body>
         </Card>
         <button className="btn btn-info" type="button" onClick={this.logout}>

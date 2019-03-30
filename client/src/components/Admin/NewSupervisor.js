@@ -9,7 +9,8 @@ class NewLeader extends Component {
       name: "",
       project: "",
       username: "",
-      password: ""
+      password: "",
+      projects: []
     };
   }
 
@@ -18,6 +19,14 @@ class NewLeader extends Component {
       if (res.data.type !== "admin") {
         this.props.history.push("/");
       }
+    });
+
+    API.getAll("project").then(res => {
+      const projects = [...res.data];
+      this.setState({
+        projects,
+        project: projects[0]._id
+      });
     });
   }
 
@@ -32,9 +41,7 @@ class NewLeader extends Component {
   submitSupervisor = event => {
     event.preventDefault();
     const name = this.state.name.trim();
-    const organization = this.state.organization.trim();
     const project = this.state.project.trim();
-    const area = this.state.area.trim();
     const username = this.state.username.trim();
     const password = this.state.password.trim();
 
@@ -46,17 +53,13 @@ class NewLeader extends Component {
       if (res) {
         API.saveNew("supervisors", {
           name,
-          organization,
           project,
-          area,
           username,
           userID: res.data._id
         }).then(() => {
           this.setState({
             name: "",
-            organization: "",
             project: "",
-            area: "",
             username: ""
           });
         });
@@ -67,9 +70,7 @@ class NewLeader extends Component {
   render() {
     const {
       name,
-      organization,
-      project,
-      area,
+      projects,
       username,
       password
     } = this.state;
@@ -88,55 +89,15 @@ class NewLeader extends Component {
             value={name}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="organization">Organization:</label>
-          <input
-            className="form-control"
-            name="organization"
-            placeholder="organization"
-            onChange={this.handleInputChange}
-            value={organization}
-          />
-        </div>
 
         <div className="form-group">
-          <label for="project">Assigned Project:</label>
-          <select
-            className="form-control"
-            name="project"
-            placeholder="Select a project"
-            onChange={this.handleInputChange}
-          >
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
+          <label htmlFor="project">Project:</label>
+          <select onChange={this.handleInputChange} name="project" className="form-control" id="project">
+            {projects.map(project => {
+              console.log(project);
+              return <option value={project._id} key={project._id}>{project.name}</option>;
+            })}
           </select>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="project">Assigned Project:</label>
-          <input
-            className="form-control"
-            name="project"
-            type="text"
-            placeholder="project"
-            onChange={this.handleInputChange}
-            value={project}
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="area">Assigned Area:</label>
-          <input
-            className="form-control"
-            name="area"
-            type="text"
-            placeholder="area"
-            onChange={this.handleInputChange}
-            value={area}
-          />
         </div>
 
         <div className="form-group">

@@ -9,7 +9,8 @@ class NewProject extends Component {
       name: "",
       organization: "",
       area: "",
-      students: ""
+      students: "",
+      hours: ""
     };
   }
 
@@ -35,25 +36,27 @@ class NewProject extends Component {
     const name = this.state.name.trim();
     const organization = this.state.organization.trim();
     const area = this.state.area.trim();
-    const students = parseInt(this.state.students.trim());
+    const { students, hours } = this.state;
 
     API.saveNew("projects", {
       name,
       organization,
       area,
-      students
+      students,
+      hours
     }).then(() => {
       this.setState({
         name: "",
         organization: "",
         area: "",
-        students: 0
+        students: 0,
+        hours: ""
       });
     });
   };
 
   render() {
-    const { name, organization, area, students } = this.state;
+    const { name, organization, area, students, hours } = this.state;
 
     return (
       <form className="container" onSubmit={this.submitProject}>
@@ -97,10 +100,22 @@ class NewProject extends Component {
           <input
             className="form-control"
             name="students"
-            type="text"
+            type="number"
             placeholder="students"
             onChange={this.handleInputChange}
             value={students}
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="hours">Daily hours:</label>
+          <input
+            className="form-control"
+            name="hours"
+            type="number"
+            placeholder="hours"
+            onChange={this.handleInputChange}
+            value={hours}
           />
         </div>
 

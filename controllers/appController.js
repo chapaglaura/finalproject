@@ -35,10 +35,14 @@ module.exports = {
       .catch(err => res.status(422).json(err));
   },
   create: function(req, res, collection) {
+    console.log(collection, req.body);
     db[collection]
       .create(req.body)
       .then(dbModel => res.json(dbModel))
-      .catch(err => res.status(422).json(err));
+      .catch(err => {
+        console.log(err);
+        res.status(422).json(err);
+      });
   },
   update: function(req, res, collection) {
     db[collection]
@@ -62,6 +66,7 @@ module.exports = {
   },
   checkLogin: function(req, res, collection) {
     const { username, password, type } = req.body;
+    console.log("chekcing login");
 
     db[collection]
       .findOne({

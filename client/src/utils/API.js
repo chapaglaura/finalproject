@@ -18,6 +18,10 @@ export default {
     return axios.get(`/api/${type}s/project/${project}`);
   },
 
+  getById: function(type, id) {
+    return axios.get(`/api/${type}s/${id}`)
+  },
+
   signupUser: function(userData) {
     return axios.post("/api/users/signup", userData);
   },
@@ -31,6 +35,7 @@ export default {
   },
 
   saveNew: function(type, data) {
+    console.log(data);
     return axios.post(`/api/${type}/`, data);
   },
 
@@ -44,5 +49,9 @@ export default {
 
   saveCheckOut: function(id, checkOut) {
     return axios.put(`/api/students/${id}`, checkOut);
+  },
+
+  checkIn: function(data) {
+    return axios.post(`/api/checkins/`, data);
   }
 };

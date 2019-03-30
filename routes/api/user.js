@@ -10,6 +10,7 @@ router.route("/signup")
 
 router.route("/login")
   .post((req, res) => {
+    console.log("checking login");
     controller.checkLogin(req, res, collection);
   })
 

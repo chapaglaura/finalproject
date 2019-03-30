@@ -3,6 +3,7 @@ module.exports = {
   Event: require("./event"),
   Project: require("./project"),
   Supervisor: require("./supervisor"),
-  User: require("./user")
+  User: require("./user"),
+  CheckIn: require("./checkin")
 };
  

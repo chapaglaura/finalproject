@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const supervisorSchema = new Schema({
   name: { type: String, required: true },
-  project: { type: String, default: "", required: true },
+  project: Schema.Types.ObjectId,
   username: { type: String, required: true },
   userID: Schema.Types.ObjectId
 });
